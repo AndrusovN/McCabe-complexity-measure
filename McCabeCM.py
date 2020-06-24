@@ -75,11 +75,12 @@ tresholds = [-1, 5, 10, 20, 10000000000]
 recomendations = ["", "are very good", "are recommended to rewrite", "you must rewrite later", "you must rewrite now"]
 
 for i in range(1, len(tresholds)):
-    print('\n\nMethods that ' + recomendations[i] + '\n')
-    for methodname in results.keys():
-        if(tresholds[i-1] < results[methodname] <= tresholds[i]):
-            if(methodname[-2] == '\n'):
-                print(methodname[:-2] + ' [' + str(results[methodname]) + "]")
-            else:
-                print(methodname[:-1] + ' [' + str(results[methodname]) + ']')
+    if(tresholds[i] > interestingComplexity):
+        print('\n\nMethods that ' + recomendations[i] + '\n')
+        for methodname in results.keys():
+            if(tresholds[i-1] < results[methodname] <= tresholds[i] and results[methodname] > interestingComplexity):
+                if(methodname[-2] == '\n'):
+                    print(methodname[:-2] + ' [' + str(results[methodname]) + "]")
+                else:
+                    print(methodname[:-1] + ' [' + str(results[methodname]) + ']')
 #print(suitableFiles)
