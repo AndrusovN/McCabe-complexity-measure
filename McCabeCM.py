@@ -42,7 +42,7 @@ for filename in filenames:
         suitableFiles.append(filename)
 
 expression = r"[\w\d<>:\[\]]+[*]{0,1} [\w\d:]+\((?:[\w\d<>:*\[\]]+ [\w\d<>:*\[\]]+(?:,[ \n]*){0,1})*\)[\n]*\{"
-keywords = [r"for", r"while", r"do", r"if", r"[&]{2}", r"[|]{2}", r"switch", r"case", r"throw", r"catch", r"goto"]
+keywords = [r"for", r"while", r"do", r"if", r"[&]{2}", r"[|]{2}", r"switch", r"throw", r"catch", r"goto"]
 
 results = {}
 for filename in suitableFiles:
