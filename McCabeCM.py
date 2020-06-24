@@ -46,7 +46,7 @@ keywords = [r"for", r"while", r"do", r"if", r"[&]{2}", r"[|]{2}", r"switch", r"c
 
 results = {}
 for filename in suitableFiles:
-    file = open(filename, 'r')
+    file = open(filename, 'r', encoding='utf-8')
     data = file.read()
     #print("\n\n\nFrom file " + filename)
 
@@ -79,7 +79,7 @@ for i in range(1, len(tresholds)):
     for methodname in results.keys():
         if(tresholds[i-1] < results[methodname] <= tresholds[i]):
             if(methodname[-2] == '\n'):
-                print(methodname[:-2])
+                print(methodname[:-2] + ' [' + str(results[methodname]) + "]")
             else:
-                print(methodname[:-1])
+                print(methodname[:-1] + ' [' + str(results[methodname]) + ']')
 #print(suitableFiles)
