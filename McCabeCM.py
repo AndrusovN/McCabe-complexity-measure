@@ -55,9 +55,10 @@ for filename in filenames:
     if(filename[-len(extention):] == extention):
         suitableFiles.append(filename)
 
-expression = r"[\w\d<>:\[\]]+[*]{0,1} [\w\d:]+\((?:[\w\d<>:*\[\]]+ [\w\d<>:*\[\]]+(?:,[ \n]*){0,1})*\)[\n]*\{"
+expression = r"[\w\d<>:\[\]]+[*]{0,1} [\w\d:]+\((?:[\w\d<>:*\[\]]+ [\w\d<>:*\[\]]+(?:,[ \n]*){0,1})*\)[\n]*[ ]*\{"
 keywords = [r"for", r"while", r"do", r"if", r"[&]{2}", r"[|]{2}", r"switch", r"throw", r"catch", r"goto"]
-tresholds = [-1, 5, 10, 20, 10000000000]
+complexityTresholds = [-1, 5, 10, 20, 10000000000]
+nestingTresholds = [-1, 3, 3, 5, 100000000000]
 warningIndex = 2
 errorIndex = 3
 recomendations = ["", "are very good", "are recommended to rewrite", "you must rewrite later", "you must rewrite now"]
@@ -83,16 +84,29 @@ for filename in suitableFiles:
     for i in range(1, len(methods)):
         method = methods[i]
         complexity = 1
+        currentNesting = 0
+        nesting = 0
+
+        for l in method:
+            if(l == '{'):
+                currentNesting += 1
+            if(l == '}'):
+                currentNesting -= 1
+            if(currentNesting > nesting):
+                nesting = currentNesting
+
+        
+
         for keyword in keywords:
             complexity += len(re.findall(keyword, method))
             #print("--------------------NEW METHOD--------------------------")
             #print(method)
             #print(re.findall(keyword, method))
-        results[names[i-1]] = complexity
+        results[names[i-1]] = {"complexity" : complexity, "nesting" : nesting}
         if(makeErrors):
-            if (complexity > tresholds[errorIndex]):
+            if (complexity > complexityTresholds[errorIndex]):
                 resultData += "\n" + errorText + "\n"
-            elif(complexity > tresholds[warningIndex]):
+            elif(complexity > complexityTresholds[warningIndex]):
                 resultData += "\n" + warningText + "\n"
         resultData += names[i-1]
         resultData += methods[i]
@@ -103,14 +117,19 @@ for filename in suitableFiles:
     writeFile.close()
 
 
+listedMethods = []
 
-for i in range(1, len(tresholds)):
-    if(tresholds[i] > interestingComplexity):
+for i in range(1, len(complexityTresholds)):
+    if(complexityTresholds[i] > interestingComplexity):
         print('\n\nMethods that ' + recomendations[i] + '\n')
         for methodname in results.keys():
-            if(tresholds[i-1] < results[methodname] <= tresholds[i] and results[methodname] > interestingComplexity):
-                if(methodname[-2] == '\n'):
-                    print(methodname[:-2] + ' [' + str(results[methodname]) + "]")
-                else:
-                    print(methodname[:-1] + ' [' + str(results[methodname]) + ']')
+            if(methodname not in listedMethods):
+                if(results[methodname]["complexity"] <= complexityTresholds[i]
+                        and results[methodname]["complexity"] > interestingComplexity
+                        and results[methodname]["nesting"] <= nestingTresholds[i]):
+                    listedMethods.append(methodname)
+                    if(methodname[-2] == '\n'):
+                        print(methodname[:-2] + ' [' + str(results[methodname]["complexity"]) + "] {" + str(results[methodname]["nesting"]) + "}")
+                    else:
+                        print(methodname[:-1] + ' [' + str(results[methodname]["complexity"]) + "] {" + str(results[methodname]["nesting"]) + "}")
 #print(suitableFiles)
