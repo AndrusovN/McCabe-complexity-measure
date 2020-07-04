@@ -55,16 +55,16 @@ for filename in filenames:
     if(filename[-len(extention):] == extention):
         suitableFiles.append(filename)
 
-expression = r"[\w\d<>:\[\]]+[*]{0,1} [\w\d:]+\((?:[\w\d<>:*\[\]]+ [\w\d<>:*\[\]]+(?:,[ \n]*){0,1})*\)[\n]*[ ]*\{"
-keywords = [r"for", r"while", r"do", r"if", r"[&]{2}", r"[|]{2}", r"switch", r"throw", r"catch", r"goto"]
+expression = r"[\w\d<>:\[\]]+[*]{0,1} [\w\d:]+\((?:[\w\d<>:*\[\]]+ [\w\d<>:*\[\]&]+(?:,[ \n]*){0,1})*\)[\n]*[ ]*\{"
+keywords = [r" for", r" while", r" do", r" if", r"[&]{2}", r"[|]{2}", r"switch", r"throw", r"catch", r"goto"]
 complexityTresholds = [-1, 5, 10, 20, 10000000000]
-nestingTresholds = [-1, 3, 3, 5, 100000000000]
+nestingTresholds = [-1, 4, 4, 6, 100000000000]
 warningIndex = 2
 errorIndex = 3
 recomendations = ["", "are very good", "are recommended to rewrite", "you must rewrite later", "you must rewrite now"]
 
 errorText = '#error "This method is too complex to read! Reconstruct it"'
-warningText = '#warning "This method is complex to read! Maybe it is good to reconstruct it'
+warningText = '#warning "This method is complex to read! Maybe it is good to reconstruct it"'
 
 results = {}
 for filename in suitableFiles:
@@ -95,12 +95,13 @@ for filename in suitableFiles:
             if(currentNesting > nesting):
                 nesting = currentNesting
 
-        
-
+        #print(method)
         for keyword in keywords:
-            complexity += len(re.findall(keyword, method))
+            matches = re.findall(keyword, method)
+            #print(matches)
+            complexity += len(matches)
             #print("--------------------NEW METHOD--------------------------")
-            #print(method)
+            #
             #print(re.findall(keyword, method))
         results[names[i-1]] = {"complexity" : complexity, "nesting" : nesting}
         if(makeErrors):
