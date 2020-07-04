@@ -18,34 +18,39 @@ C:Users\YourUsername>PathToMcCabeComplexityMeasureFolder\McCabeCM.py PathToYourP
 
 Methods that are very good
 
-int main(int argc, char* argv[])
+int main(int argc, char* argv[]) [4] {1}
 
 
 Methods that are recommended to rewrite
 
-void SomeVoid(int firstArg, bool secondArg)
-bool CheckSomeData()
+void SomeVoid(int firstArg, bool secondArg) [8] {2}
+bool CheckSomeData() [9] {3}
 
 
 Methods that you must rewrite later
 
-void SomeBadConstructedVoid()
+void SomeBadConstructedVoid() [5] {5}
 bool CheckAnotherData(int arg1,
                       bool arg2,
                       char* arg3,
                       std::string arg4,
                       size_t arg5,
                       void* arg6,
-                      int* errorStatus)
+                      int* errorStatus) [17] {3}
 
 
 Methods that you must rewrite now
 
-void TheWorstVoidConstructedEver()
+void TheWorstVoidConstructedEver() [26] {5}
 
 Соответственно, те методы, которые помечены, как very good, очень хороши (респект вам за такие методы)
 Методы, которые помечены, как recommended to rewrite, тоже неплохи, но если вы очень беспокоетесь по поводу читаемости кода, то лучше их разделить на несколько методов
 Методы, помеченные, как you must rewrite later, довольно плохи, но переживут в таком виде до ближайшего рефакторинга
 И методы, помеченные как you must rewrite now, очень ОЧЕНЬ плохи и их срочно надо разделять на несколько более простых, понятных и читабельных методов, 
 а то вы сами можете в них запутаться раньше, чем допишете этот модуль
+
+Для большей информации в скобках указываются значения счетчиков:
+  1. В квадратных скобках подписано количество ключевых слов, влияющих на сложность
+  2. В фигурных скобках написана максимальная вложенность метода
+В случае, если любой из этих показателей становится достаточно велик, метод перемещается в следующую группу (например, от хороших к тем, которые рекомендуется переписать)
   
